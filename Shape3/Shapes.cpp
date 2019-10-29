@@ -240,18 +240,25 @@ bool RoundBox::inside(double x, double y) const {
 	return true;
 }
 
-
-Group::Group(Color c, int num, Shape list[]):Shape(c){
+//it takes the array that is passed in and put it in the group dynamic array
+//it also makes the color of each shape inside the array as color of array
+Group::Group(Color c, int num, Shape* list[]):Shape(c){
 	_n = num;
-	_list = new Shape[];
+	_list = new Shape*[num];
 	for (int i = 0; i < _n; ++i)
 	{
 		_list[i] = list[i];
+		_list[i]->color(c);
 	}
 }
+//destructor deletes all the allocations(pointers to shapes) in the array and deletes the array of pointers
 Group::~Group(){
+	for (int i = 0; i < _n; i++){
+		delete _list[i];
+	}
 	delete[] _list;
 }
+//calls the area function on each shape and sums it up
 double Group::area() const{
 	double allArea = 0;
 	for(int i = 0; i < _n; i++){
@@ -259,6 +266,7 @@ double Group::area() const{
 	}
 	return allArea;
 }
+//calls the perimeter function on each shape and sums it up
 double Group::perimeter() const{
 	double allPerimeter = 0;
 	for (int i = 0; i < _n; ++i)
@@ -267,52 +275,57 @@ double Group::perimeter() const{
 	}
 	return allPerimeter;
 }
+//calls the move function on each shape
 void Group::move(double m, double n){
 	for (int i = 0; i < _n; ++i)
 		_list[i]->move(m, n);
 }
+//calls the render function on each shape
 void Group::render(std::ostream& out) const{
-	out << "Group(" << ColorArr[color()] << "," << _n;
+	out << "Group(" << ColorArr[Shape::color()] << "," << _n;
 	for (int i = 0; i < _n; ++i)
 	{
-		out << "," << _list->render();
+		out << ",";
+		_list[i]->render(out);
 	}
 	out << ")";
 }
+//calls the inside function on each shape and checks if any the shape has point inside it else returns false
 bool Group::inside(double a, double b) const{
 	for (int i = 0; i < _n; ++i)
 	{
-		if(_list->inside(a, b))
+		if(_list[i]->inside(a, b))
 			return true;
 	}
 	return false;
 }
-
-int main()
-{
-	Shape * list[2];
-	list[0] = new Box(GREEN, 0, 1, 1, 0);
-	list[1] = new Circle(YELLOW, 2, 2, 2);
-	Group g(BLUE, 2, list);
-
-	cout << "Group area: " << g.area() << "\n";
-	cout << "Group perimeter: " << g.perimeter() << "\n";
-
-	g.move(1,1);
-	g.render(cout); cout << "\n";
-	g.color(RED);
-	g.render(cout); cout << "\n";
-
-	cout << "Count: " << g.shapes() << "\n";
-	g.shape(1)->render(cout); cout << "\n";
-
-	Shape * list2[3];
-	list2[0] = new Circle(WHITE,5,5,1);
-	list2[1] = new Box(GREEN,7,1,9,-10);
-	list2[2] = new RoundBox(BLACK,5,5,8.5,4.5,0.1);
-	g.shapes(3,list2);
-	g.render(cout); cout << "\n";
+//returns the pointer to the shape sitting in the sepecific point in array
+Shape* Group::shape (int n) const{
+	return _list[n];
 }
-
+//returns the number of pointers to shapes in the array
+int Group::shapes() const{
+	return _n;
+}
+//deletes all the active allocation like in destructor and then reallocates like in constructor excepts doesn't set the color
+void Group::shapes(int n, Shape* list[]){
+	for (int i = 0; i < _n; i++){
+		delete _list[i];
+	}
+	delete [] _list;
+	_n = n;
+	_list = new Shape*[n];
+	for (int i = 0; i < _n; ++i){
+		_list[i] = list[i];
+	}
+}
+//sets color of the group and each shape in the group to the requested color
+void Group::color(Color c){
+	Shape::color(c);
+	for (int i = 0; i < _n; ++i)
+	{
+		_list[i]->color(c);
+	}
+}
 
 

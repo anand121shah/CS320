@@ -9,7 +9,6 @@ enum Color { BLACK, RED, GREEN, YELLOW, BLUE, MAGENTA, CYAN, WHITE, INVALID };
 //copying constructor method is declared but not used/implemented in this assignment
 //getters and setters are one liners, so, implemented inside the class
 
-
 //Abstract shape
 class Shape
 {
@@ -21,7 +20,7 @@ public:
 	Shape(Color c){ _c = c; };
 	virtual ~Shape(){};
 	Color color() const;
-	void color(Color c){_c = c;};
+	virtual void color(Color c){_c = c;};
 	virtual double area() const = 0;
 	virtual double perimeter() const = 0;
 	virtual void move(double x, double y) = 0;
@@ -171,22 +170,27 @@ public:
 	void render(std::ostream& out) const;
 	bool inside(double x, double y) const;
 	void radius(double x){_radius = x;};
-	double radius() const {return _radius;};
-	
+	double radius() const {return _radius;};	
 };
 
+//This is a derived class of Shape. It contains a dynamic array of shapes and the number of elements in the array
+//All the methods are redefined as it is drastically different from any of the derived shape class
 class Group : public Shape
 {
 private:
 	int _n;
-	Shape* _list;
+	Shape** _list;
 public:
-	Group(Color c, int num, Shape list[]);
+	Group(Color c, int num, Shape* list[]);
 	~Group();
 	double area() const;
 	double perimeter() const;
 	void move(double m, double n);
 	void render(std::ostream& out) const;
 	bool inside(double a, double b) const;
+	Shape* shape (int n) const;
+	int shapes() const;
+	void shapes(int n, Shape* list[]);
+	void color(Color c);
 };
 
