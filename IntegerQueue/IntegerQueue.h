@@ -22,4 +22,4 @@ class IntegerQueue{
     void print();
 };
     //outputstream is outside of class because the return type is ostream
-    std::ostream& operator<<(std::ostream& out, IntegerQueue r);
+std::ostream& operator<<(std::ostream& out, IntegerQueue r);
