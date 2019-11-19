@@ -25,11 +25,8 @@ int main(){
 		getPlayer();
 		getInitial();
 		runChildhood();
-		if(runGame())
-			cout << "Congratulations! You have passed the tests! You are now appointed as the owner of the organization." << endl;
-		else
-			cout << "You failed to become a successful. You are now an average ACU Graduate!" << endl;
-
+		if(runGame())	cout << "Congratulations! You have passed the tests! You are now appointed as the owner of the organization." << endl;
+		else	cout << "You failed to become a successful. You are now an average ACU Graduate!" << endl;
 		cout << "Do you want to restart the game? (y/n)" << endl;
 		char i;
 		cin >> i;
