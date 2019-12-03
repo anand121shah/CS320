@@ -1,6 +1,7 @@
 #include <iostream>
 #include <cmath>
 
+
 template <typename T>
 class Tuple
 {
@@ -9,8 +10,7 @@ private:
 public:
 	Tuple(int n);
 	Tuple(T x[], int n);
-	template <typename T>
-	Tuple(Tuple<T> a);
+	Tuple(const Tuple<T> &a);
 	~Tuple();
 	int size();
 	double magnitude();
@@ -26,11 +26,11 @@ public:
 
 template <typename T>
 Tuple::Tuple(int n){
-	_data = new TupleData(n);
+	_data = new TupleData<T>(n);
 }
 template <typename T>
 Tuple::Tuple(T x[], int n){
-	_data = new TupleData(x, n);
+	_data = new TupleData<T>(x, n);
 }
 template <typename T>
 Tuple::Tuple(Tuple<T> a){
@@ -50,7 +50,7 @@ double Tuple::magnitude(){
 }
 template <typename T>
 T Tuple::operator+(T x){
-
+	
 }
 template <typename T>
 T Tuple::operator+=(T x){
@@ -66,7 +66,8 @@ T Tuple::operator*=(T x){
 }
 template <typename T>
 T Tuple::operator=(T x){
-
+	//points to the same pointer 
+	// but keep an account for "deallocation of 5 ints, share 3 ints" / DIMENSION thing
 }
 template <typename T>
 T Tuple::operator==(T x){
@@ -94,16 +95,23 @@ class TupleData
 private:
 	int _owners, _indices;
 	T * _dataArr;
+	static T zero;
 public:
+
 	TupleData(int n);
 	TupleData(T* a, int n);
 	~TupleData();
 	int size() const;
 	int useCount() const;
-	void setCount(int a);
 	double magnitude();
 	T& operator[](int a);
+	const T& operator[](int a) const;
+	void decOwners();
+	void incOwners(){_owners++};
 };
+
+template <typename T>
+static T TupleData::zero = 0;
 
 template <typename T>
 TupleData::TupleData(int n) {
@@ -135,10 +143,6 @@ int TupleData::useCount() const {
 	return _owners;
 }
 template <typename T>
-int TupleData::setCount(int a){
-	_owners = a;
-}
-template <typename T>
 double TupleData::magnitude(){
 	double x = 0;
 	for (int i = 0; i < _indices; ++i){
@@ -148,11 +152,26 @@ double TupleData::magnitude(){
 }
 template <typename T>
 T& TupleData::operator[](int a) {
-	return &_dataArr[a];
+	if(a >=0 && a <= _indices)
+		return _dataArr[a];
+	else{
+		zero = 0;
+		return zero;
+	}
 }
-
-
-
-
-
-
+template <typename T>
+const T& TupleData::operator[](int a) const {
+	if(a >=0 && a <= _indices)
+		return _dataArr[a];
+	else{
+		zero = 0;
+		return zero;
+	}
+}
+template <typename T>
+void TupleData::decOwners(){
+	if (_owners == 1)
+		delete this;
+	else
+		_owners--;
+}

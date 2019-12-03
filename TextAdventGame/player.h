@@ -1,7 +1,7 @@
 class player
 {
 private:
-	string fName, lName, nickName;\
+	string fName, lName, nickName;
 	char gender;
 	bool skill, connection, money;
 	int age;

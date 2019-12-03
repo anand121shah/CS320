@@ -12,7 +12,7 @@ class skill : public pickups
 private:
 	bool analyze, creative, critical;
 public:
-	skill(){analyze = 0; creative = 0; critical = 0;};
+	skill(){analyze = false; creative = false; critical = false;};
 	~skill();
 };
 
@@ -21,7 +21,7 @@ class connection : public pickups
 private:
 	bool school, workplace, family;
 public:
-	connection(school = 0; workplace = 0; family = 0;);
+	connection(){school = false; workplace = false; family = false;};
 	~connection();
 };
 
@@ -30,7 +30,7 @@ class funding : public pickups
 private:
 	bool personal, heritage, credit;
 public:
-	funding(personal = 0; heritage = 0; credit = 0;);
+	funding(){personal = false; heritage = false; credit = false;};
 	~funding();
 };
 
