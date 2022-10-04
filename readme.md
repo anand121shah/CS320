@@ -1,4 +1,4 @@
-# This is the repo for CS230 assignments codes.
+# This is the repo for CS230 codes.
 
 The table of contents:
 
